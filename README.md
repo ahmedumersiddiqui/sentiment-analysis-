@@ -18,7 +18,6 @@ Ensure you have the following installed:
 - NumPy
 - Keras Preprocessing
 - Flask-CORS
-- roman_tokenizer (custom tokenizer)
 
 ### Installing Dependencies
 Install the required Python libraries using `pip`:
