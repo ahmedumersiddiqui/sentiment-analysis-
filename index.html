@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeepSentiment Model</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        display: flex;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 100px;
+      }
+
+      .left,
+      .right {
+        flex: 1;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .left {
+        margin-right: 20px;
+      }
+
+      .navbar {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 8px 8px 0 0;
+        text-align: left;
+      }
+
+      .navbar h1 {
+        margin: 0;
+        font-size: 24px;
+        padding-left: 20px;
+        text-align: left;
+      }
+      #text{
+        margin-top: 10;
+        font-size: 20px;
+        text-align: center;
+      }
+
+      #abstract,
+      #input-form {
+        text-align: left;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+      #input-form {
+        justify-content: center;
+        align-items: center;
+      }
+
+      #input-form input[type="text"] {
+        width: calc(100% - 90px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+        margin-right: -5px;
+      }
+
+      #input-form button {
+        width: fit-content;
+        padding: 10.5px;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+      }
+
+      #input-form button:hover {
+        background-color: #555;
+      }
+      h1 {
+        background-color: #333;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        margin: 0;
+        font-size: 36px;
+      }
+
+      #result {
+        margin-top: 20px;
+        font-size: 24px;
+      }
+      #sentence1 {
+        margin-top: 20px;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Unveiling Sentiment Analysis of Roman Urdu</h1>
+    <div id="text">
+        <h1>F23-336A</h1>
+    </div>
+    <div class="container">
+      <div class="left">
+        <div class="navbar"><h1>Abstract</h1></div>
+        <div id="abstract">
+          <p>
+            Sentiment analysis in Roman Urdu text presents a unique challenge
+            due to its prevalence in digital communication across regions like
+            Pakistan and India, coupled with its understudied nature in academic
+            research. This study addresses this gap by thoroughly investigating
+            sentiment analysis in Roman Urdu, aiming to uncover distinctive
+            sentiment patterns and trends within this linguistic context.
+            Leveraging a dataset of 139,000 reviews from diverse sources,
+            including e-commerce platforms and user-generated content, we
+            designed and implemented a custom Deep Sentiment Model tailored to
+            Roman Urdu text. Our model architecture integrates advanced
+            techniques such as Bi-LSTM, attention mechanisms, and capsule
+            networks to effectively capture sentiment nuances. Comparative
+            analysis against baseline and state-of-the-art models demonstrates
+            the superiority of our approach, achieving an accuracy of 88.3% and
+            outperforming all other models across multiple evaluation metrics.
+            These findings underscore the efficacy of our proposed Deep
+            Sentiment Model in accurately capturing and analyzing sentiment in
+            Roman Urdu text, thereby facilitating informed decision making and
+            communication strategies in various domains.
+          </p>
+        </div>
+      </div>
+      <div class="right">
+        <div class="navbar"><h1>Input Form</h1></div>
+        <form id="input-form">
+          <input type="text" id="sentence" placeholder="Enter a sentence..." />
+          <button type="submit">Submit</button>
+        </form>
+        <div id="sentence1"></div>
+        <div id="result"></div>
+      </div>
+    </div>
+    <script>
+      document
+        .getElementById("input-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const sentence = document.getElementById("sentence").value;
+          const response = await fetch(
+            "http://127.0.0.1:5000/predict_sentiment",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ sentence: sentence }),
+            }
+          );
+          const data = await response.json();
+          
+          const sentenceDiv = document.getElementById("sentence1");
+          const resultDiv = document.getElementById("result");
+          sentenceDiv.textContent = `Input Tokens: ${data.input_sentence}`;
+          resultDiv.textContent = `Predicted Sentiment: ${data.predicted_sentiment}`;
+          if (data.predicted_sentiment === "Positive") {
+            sentenceDiv.style.color= "green"
+            resultDiv.style.color = "green";
+            resultDiv.innerHTML += " 😊";
+          } else if (data.predicted_sentiment === "Neutral") {
+            sentenceDiv.style.color= "gray"
+            resultDiv.style.color = "gray";
+            resultDiv.innerHTML += " 😐";
+          } else {
+            sentenceDiv.style.color= "red"
+            resultDiv.style.color = "red";
+            resultDiv.innerHTML += " 😔";
+          }
+        });
+    </script>
+  </body>
+</html>
